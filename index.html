@@ -1,110 +1,105 @@
 <!doctype html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <meta name="color-scheme" content="light" />
-    <meta name="theme-color" content="#f5f7f6" />
-    <meta name="description" content="QRis — a simple home for turning links into downloadable QR codes." />
-    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-    <title>QRis — Link to QR code</title>
-  </head>
-  <body>
-    <main class="app" aria-labelledby="app-title">
-      <header class="app-header">
-        <div class="brand">
-          <svg class="brand-mark" viewBox="0 0 32 32" fill="none" aria-hidden="true">
-            <rect x="4" y="4" width="9" height="9" rx="1" />
-            <rect x="19" y="4" width="9" height="9" rx="1" />
-            <rect x="4" y="19" width="9" height="9" rx="1" />
-            <path d="M20 19v9h8v-8h-4M4 9h9M19 9h9M4 24h9" />
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="color-scheme" content="light" />
+  <meta name="theme-color" content="#f5f7f6" />
+  <meta name="description" content="QRis — a simple home for turning links into downloadable QR codes." />
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+  <title>QRis — Link to QR code</title>
+</head>
+
+<body>
+  <main class="app" aria-labelledby="app-title">
+    <header class="app-header">
+      <div class="brand">
+        <svg class="brand-mark" viewBox="0 0 32 32" fill="none" aria-hidden="true">
+          <rect x="4" y="4" width="9" height="9" rx="1" />
+          <rect x="19" y="4" width="9" height="9" rx="1" />
+          <rect x="4" y="19" width="9" height="9" rx="1" />
+          <path d="M20 19v9h8v-8h-4M4 9h9M19 9h9M4 24h9" />
+        </svg>
+        <h1 id="app-title">QRis<span class="brand-dot">.</span></h1>
+      </div>
+      <p>Free and functional. No "Create account" bullshit.</p>
+    </header>
+
+    <section class="workspace" aria-label="QR code maker">
+      <div class="link-field">
+        <label for="link">Link</label>
+        <input id="link" name="link" type="text" inputmode="url" autocomplete="url" autocapitalize="none"
+          spellcheck="false" placeholder="https://example.com" aria-describedby="link-message" />
+        <p id="link-message" class="field-message" aria-live="polite" hidden></p>
+      </div>
+
+      <div class="qr-preview" aria-label="QR code preview" aria-busy="false">
+        <div class="empty-state">
+          <svg class="preview-icon" viewBox="0 0 48 48" fill="none" aria-hidden="true">
+            <path
+              d="M16 6H9a3 3 0 0 0-3 3v7M32 6h7a3 3 0 0 1 3 3v7M42 32v7a3 3 0 0 1-3 3h-7M16 42H9a3 3 0 0 1-3-3v-7" />
+            <rect x="15" y="15" width="6" height="6" rx="1" />
+            <rect x="27" y="15" width="6" height="6" rx="1" />
+            <rect x="15" y="27" width="6" height="6" rx="1" />
+            <path d="M28 27v6h5v-5" />
           </svg>
-          <h1 id="app-title">QRis<span class="brand-dot">.</span></h1>
+          <p>Your QR code will appear here.</p>
         </div>
-        <p>A simple way to share your link.</p>
-      </header>
+        <img class="qr-image" alt="QR code for your link" width="1024" height="1024" hidden />
+      </div>
 
-      <section class="workspace" aria-label="QR code maker">
-        <div class="link-field">
-          <label for="link">Link</label>
-          <input
-            id="link"
-            name="link"
-            type="text"
-            inputmode="url"
-            autocomplete="url"
-            autocapitalize="none"
-            spellcheck="false"
-            placeholder="https://example.com"
-            aria-describedby="link-message"
-          />
-          <p id="link-message" class="field-message" aria-live="polite" hidden></p>
-        </div>
+      <button class="download-button" type="button" disabled>
+        <svg viewBox="0 0 24 24" fill="none" aria-hidden="true">
+          <path d="M12 3v12m-4-4 4 4 4-4M5 16v4h14v-4" />
+        </svg>
+        Download PNG
+      </button>
 
-        <div class="qr-preview" aria-label="QR code preview" aria-busy="false">
-          <div class="empty-state">
-            <svg class="preview-icon" viewBox="0 0 48 48" fill="none" aria-hidden="true">
-              <path d="M16 6H9a3 3 0 0 0-3 3v7M32 6h7a3 3 0 0 1 3 3v7M42 32v7a3 3 0 0 1-3 3h-7M16 42H9a3 3 0 0 1-3-3v-7" />
-              <rect x="15" y="15" width="6" height="6" rx="1" />
-              <rect x="27" y="15" width="6" height="6" rx="1" />
-              <rect x="15" y="27" width="6" height="6" rx="1" />
-              <path d="M28 27v6h5v-5" />
-            </svg>
-            <p>Your QR code will appear here.</p>
+      <div class="customization-controls" aria-label="QR customization">
+        <fieldset>
+          <legend>Background</legend>
+          <div class="color-options">
+            <label class="color-option"><input type="radio" name="background" value="#ffffff" checked />White</label>
+            <label class="color-option"><input type="radio" name="background" value="#000000" />Black</label>
+            <label class="color-option"><input type="radio" name="background" value="transparent" />Transparent</label>
+            <label class="color-option"><input type="radio" name="background" value="custom" />Custom</label>
           </div>
-          <img class="qr-image" alt="QR code for your link" width="1024" height="1024" hidden />
-        </div>
+          <div class="custom-color" id="background-custom-field" hidden>
+            <label for="background-custom">Custom background color</label>
+            <div class="color-value">
+              <input type="color" id="background-custom" value="#ffffff" />
+              <output id="background-color-value" for="background-custom">#ffffff</output>
+            </div>
+          </div>
+        </fieldset>
 
-        <button class="download-button" type="button" disabled>
-          <svg viewBox="0 0 24 24" fill="none" aria-hidden="true">
-            <path d="M12 3v12m-4-4 4 4 4-4M5 16v4h14v-4" />
-          </svg>
-          Download PNG
-        </button>
+        <fieldset>
+          <legend>QR pattern</legend>
+          <div class="color-options">
+            <label class="color-option"><input type="radio" name="pattern" value="#000000" checked />Black</label>
+            <label class="color-option"><input type="radio" name="pattern" value="#ffffff" />White</label>
+            <label class="color-option"><input type="radio" name="pattern" value="custom" />Custom</label>
+          </div>
+          <div class="custom-color" id="pattern-custom-field" hidden>
+            <label for="pattern-custom">Custom QR pattern color</label>
+            <div class="color-value">
+              <input type="color" id="pattern-custom" value="#000000" />
+              <output id="pattern-color-value" for="pattern-custom">#000000</output>
+            </div>
+          </div>
+        </fieldset>
+        <fieldset>
+          <legend>Shape</legend>
+          <div class="shape-options">
+            <label class="shape-option"><input type="radio" name="shape" value="square" checked />Square</label>
+            <label class="shape-option"><input type="radio" name="shape" value="rounded" />Rounded dots</label>
+          </div>
+        </fieldset>
+      </div>
+    </section>
+  </main>
+  <script type="module" src="/src/main.js"></script>
+</body>
 
-        <div class="customization-controls" aria-label="QR customization">
-          <fieldset>
-            <legend>Background</legend>
-            <div class="color-options">
-              <label class="color-option"><input type="radio" name="background" value="#ffffff" checked />White</label>
-              <label class="color-option"><input type="radio" name="background" value="#000000" />Black</label>
-              <label class="color-option"><input type="radio" name="background" value="transparent" />Transparent</label>
-              <label class="color-option"><input type="radio" name="background" value="custom" />Custom</label>
-            </div>
-            <div class="custom-color" id="background-custom-field" hidden>
-              <label for="background-custom">Custom background color</label>
-              <div class="color-value">
-                <input type="color" id="background-custom" value="#ffffff" />
-                <output id="background-color-value" for="background-custom">#ffffff</output>
-              </div>
-            </div>
-          </fieldset>
-
-          <fieldset>
-            <legend>QR pattern</legend>
-            <div class="color-options">
-              <label class="color-option"><input type="radio" name="pattern" value="#000000" checked />Black</label>
-              <label class="color-option"><input type="radio" name="pattern" value="#ffffff" />White</label>
-              <label class="color-option"><input type="radio" name="pattern" value="custom" />Custom</label>
-            </div>
-            <div class="custom-color" id="pattern-custom-field" hidden>
-              <label for="pattern-custom">Custom QR pattern color</label>
-              <div class="color-value">
-                <input type="color" id="pattern-custom" value="#000000" />
-                <output id="pattern-color-value" for="pattern-custom">#000000</output>
-              </div>
-            </div>
-          </fieldset>
-          <fieldset>
-            <legend>Shape</legend>
-            <div class="shape-options">
-              <label class="shape-option"><input type="radio" name="shape" value="square" checked />Square</label>
-              <label class="shape-option"><input type="radio" name="shape" value="rounded" />Rounded dots</label>
-            </div>
-          </fieldset>
-        </div>
-      </section>
-    </main>
-    <script type="module" src="/src/main.js"></script>
-  </body>
 </html>
