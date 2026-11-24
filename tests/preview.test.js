@@ -27,18 +27,18 @@ function setup() {
   }
   for (const selector of [
     '#link', '#link-message', '.qr-preview', '.empty-state', '.qr-image',
-    '.download-button', '.color-controls', '#background-custom', '#pattern-custom',
+    '.download-button', '.customization-controls', '#background-custom', '#pattern-custom',
     '#background-custom-field', '#pattern-custom-field',
     '#background-color-value', '#pattern-color-value',
   ]) elements.set(selector, element());
   elements.get('#background-custom').value = '#ffffff';
   elements.get('#pattern-custom').value = '#000000';
-  const selected = { background: '#ffffff', pattern: '#000000' };
+  const selected = { background: '#ffffff', pattern: '#000000', shape: 'square' };
   const renders = [], downloads = [], liveUrls = new Set();
   let nextUrl = 0;
   const document = {
     querySelector(selector) {
-      const radio = selector.match(/^input\[name="(background|pattern)"\]/);
+      const radio = selector.match(/^input\[name="(background|pattern|shape)"\]/);
       if (radio) return selector.endsWith(':checked')
         ? { value: selected[radio[1]] }
         : { checked: selected[radio[1]] === 'custom' };
@@ -74,11 +74,11 @@ function setup() {
     },
     choose(group, value) {
       selected[group] = value;
-      return elements.get('.color-controls').events.input();
+      return elements.get('.customization-controls').events.input();
     },
     pick(group, value) {
       elements.get(`#${group}-custom`).value = value;
-      return elements.get('.color-controls').events.input();
+      return elements.get('.customization-controls').events.input();
     },
     async finish(index) {
       renders[index].resolve(new Blob([`PNG ${index}`], { type: 'image/png' }));
@@ -173,4 +173,53 @@ test('late link or color renders cannot restore stale previews or downloads', as
   assert.equal(app.liveUrls.size, 0);
   app.elements.get('.download-button').events.click();
   assert.equal(app.downloads.length, 0);
+});
+
+test('Rounded dots keeps square corners, export dimensions, and margins across link and color changes', async () => {
+  const app = setup();
+  app.choose('shape', 'rounded');
+  assert.equal(app.renders.length, 0);
+  app.type('example.com');
+  await app.finish(0);
+  app.choose('background', 'transparent');
+  app.choose('pattern', 'custom');
+  app.pick('pattern', '#193b70');
+  app.type('https://example.org/longer/path?campaign=test&source=qris#download');
+  const options = app.renders[4].options;
+  assert.equal(options.shape, 'square');
+  assert.equal(options.width, 1024);
+  assert.equal(options.height, 1024);
+  assert.equal(options.margin, 144);
+  assert.equal(options.backgroundOptions.color, 'transparent');
+  assert.deepEqual(options.dotsOptions, { type: 'rounded', color: '#193b70' });
+  assert.deepEqual(options.cornersSquareOptions, { type: 'square', color: '#193b70' });
+  assert.deepEqual(options.cornersDotOptions, { type: 'square', color: '#193b70' });
+  await app.finish(4);
+  app.elements.get('.download-button').events.click();
+  assert.deepEqual(app.downloads, [{ href: app.elements.get('.qr-image').src, download: 'qris.png' }]);
+});
+
+test('shape changes invalidate old downloads and late renders cannot replace the current shape', async () => {
+  const app = setup();
+  app.type('example.com');
+  await app.finish(0);
+  const oldUrl = app.elements.get('.qr-image').src;
+  app.choose('shape', 'rounded');
+  assert.equal(app.elements.get('.download-button').disabled, true);
+  assert.equal(app.liveUrls.has(oldUrl), false);
+  app.elements.get('.download-button').events.click();
+  assert.equal(app.downloads.length, 0);
+  app.choose('shape', 'square');
+  await app.finish(2);
+  const currentUrl = app.elements.get('.qr-image').src;
+  await app.finish(1);
+  assert.equal(app.elements.get('.qr-image').src, currentUrl);
+  app.elements.get('.download-button').events.click();
+  assert.deepEqual(app.downloads, [{ href: currentUrl, download: 'qris.png' }]);
+  app.choose('shape', 'rounded');
+  app.type('');
+  await app.finish(3);
+  assert.equal(app.elements.get('.download-button').disabled, true);
+  assert.equal(app.elements.get('.qr-image').hidden, true);
+  assert.equal(app.liveUrls.size, 0);
 });

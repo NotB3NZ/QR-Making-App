@@ -1,4 +1,4 @@
-export function createQrOptions(link, { background, pattern }) {
+export function createQrOptions(link, { background, pattern, shape = 'square' }) {
   return {
     width: 1024,
     height: 1024,
@@ -9,7 +9,7 @@ export function createQrOptions(link, { background, pattern }) {
     // The background color (including transparency) also covers this margin.
     margin: 144,
     qrOptions: { errorCorrectionLevel: 'M' },
-    dotsOptions: { type: 'square', color: pattern },
+    dotsOptions: { type: shape === 'rounded' ? 'rounded' : 'square', color: pattern },
     cornersSquareOptions: { type: 'square', color: pattern },
     cornersDotOptions: { type: 'square', color: pattern },
     backgroundOptions: { color: background },
