@@ -61,6 +61,41 @@
           </svg>
           Download PNG
         </button>
+
+        <div class="color-controls" aria-label="QR colors">
+          <fieldset>
+            <legend>Background</legend>
+            <div class="color-options">
+              <label class="color-option"><input type="radio" name="background" value="#ffffff" checked />White</label>
+              <label class="color-option"><input type="radio" name="background" value="#000000" />Black</label>
+              <label class="color-option"><input type="radio" name="background" value="transparent" />Transparent</label>
+              <label class="color-option"><input type="radio" name="background" value="custom" />Custom</label>
+            </div>
+            <div class="custom-color" id="background-custom-field" hidden>
+              <label for="background-custom">Custom background color</label>
+              <div class="color-value">
+                <input type="color" id="background-custom" value="#ffffff" />
+                <output id="background-color-value" for="background-custom">#ffffff</output>
+              </div>
+            </div>
+          </fieldset>
+
+          <fieldset>
+            <legend>QR pattern</legend>
+            <div class="color-options">
+              <label class="color-option"><input type="radio" name="pattern" value="#000000" checked />Black</label>
+              <label class="color-option"><input type="radio" name="pattern" value="#ffffff" />White</label>
+              <label class="color-option"><input type="radio" name="pattern" value="custom" />Custom</label>
+            </div>
+            <div class="custom-color" id="pattern-custom-field" hidden>
+              <label for="pattern-custom">Custom QR pattern color</label>
+              <div class="color-value">
+                <input type="color" id="pattern-custom" value="#000000" />
+                <output id="pattern-color-value" for="pattern-custom">#000000</output>
+              </div>
+            </div>
+          </fieldset>
+        </div>
       </section>
     </main>
     <script type="module" src="/src/main.js"></script>

@@ -1,5 +1,6 @@
 import QRCodeStyling from 'qr-code-styling';
 import { normalizeLink } from './link.js';
+import { createQrOptions } from './qr.js';
 import './style.css';
 
 const input = document.querySelector('#link');
@@ -8,10 +9,35 @@ const preview = document.querySelector('.qr-preview');
 const emptyState = document.querySelector('.empty-state');
 const image = document.querySelector('.qr-image');
 const downloadButton = document.querySelector('.download-button');
+const colorControls = document.querySelector('.color-controls');
+const backgroundPicker = document.querySelector('#background-custom');
+const patternPicker = document.querySelector('#pattern-custom');
 
 let revision = 0;
-let readyLink = '';
+let readyKey = '';
 let pngUrl = '';
+
+function readColors() {
+  const background = document.querySelector('input[name="background"]:checked').value;
+  const pattern = document.querySelector('input[name="pattern"]:checked').value;
+  return {
+    background: background === 'custom' ? backgroundPicker.value : background,
+    pattern: pattern === 'custom' ? patternPicker.value : pattern,
+  };
+}
+
+function renderKey(link, colors) {
+  return JSON.stringify([link, colors.background, colors.pattern]);
+}
+
+function updateColorControls() {
+  document.querySelector('#background-custom-field').hidden =
+    !document.querySelector('input[name="background"][value="custom"]').checked;
+  document.querySelector('#pattern-custom-field').hidden =
+    !document.querySelector('input[name="pattern"][value="custom"]').checked;
+  document.querySelector('#background-color-value').value = backgroundPicker.value;
+  document.querySelector('#pattern-color-value').value = patternPicker.value;
+}
 
 function showMessage(text, invalid = false) {
   message.textContent = text;
@@ -21,11 +47,11 @@ function showMessage(text, invalid = false) {
 
 function clearPreview() {
   downloadButton.disabled = true;
-  readyLink = '';
+  readyKey = '';
   image.hidden = true;
   image.removeAttribute('src');
   emptyState.hidden = false;
-  preview.classList.remove('has-qr');
+  preview.classList.remove('has-qr', 'is-transparent');
   if (pngUrl) URL.revokeObjectURL(pngUrl);
   pngUrl = '';
 }
@@ -33,6 +59,8 @@ function clearPreview() {
 async function updatePreview() {
   const currentRevision = ++revision;
   const link = normalizeLink(input.value);
+  const colors = readColors();
+  updateColorControls();
   clearPreview();
   showMessage('');
   preview.setAttribute('aria-busy', 'false');
@@ -46,21 +74,8 @@ async function updatePreview() {
   preview.setAttribute('aria-busy', 'true');
   let nextUrl = '';
   try {
-    // A separate instance keeps overlapping renders independent while typing.
-    const qr = new QRCodeStyling({
-      width: 1024,
-      height: 1024,
-      type: 'canvas',
-      shape: 'square',
-      data: link,
-      // At least four modules of white space even for the smallest QR matrix.
-      margin: 144,
-      qrOptions: { errorCorrectionLevel: 'M' },
-      dotsOptions: { type: 'square', color: '#000000' },
-      cornersSquareOptions: { type: 'square', color: '#000000' },
-      cornersDotOptions: { type: 'square', color: '#000000' },
-      backgroundOptions: { color: '#ffffff' },
-    });
+    // Separate instances keep overlapping link and color renders independent.
+    const qr = new QRCodeStyling(createQrOptions(link, colors));
     const blob = await qr.getRawData('png');
     if (currentRevision !== revision) return;
     if (!(blob instanceof Blob) || !blob.size) throw new Error('PNG generation failed');
@@ -76,11 +91,12 @@ async function updatePreview() {
     }
 
     pngUrl = nextUrl;
-    readyLink = link;
+    readyKey = renderKey(link, colors);
     image.src = pngUrl;
     image.hidden = false;
     emptyState.hidden = true;
     preview.classList.add('has-qr');
+    preview.classList.toggle('is-transparent', colors.background === 'transparent');
     downloadButton.disabled = false;
   } catch {
     if (nextUrl) URL.revokeObjectURL(nextUrl);
@@ -93,11 +109,12 @@ async function updatePreview() {
 }
 
 input.addEventListener('input', updatePreview);
+colorControls.addEventListener('input', updatePreview);
 // Also handles autofill and values restored when returning to the page.
 window.addEventListener('pageshow', updatePreview);
 
 downloadButton.addEventListener('click', () => {
-  if (!pngUrl || !readyLink || normalizeLink(input.value) !== readyLink) return;
+  if (!pngUrl || renderKey(normalizeLink(input.value), readColors()) !== readyKey) return;
   // Download the exact PNG used by the preview, without a second render.
   const anchor = document.createElement('a');
   anchor.href = pngUrl;

@@ -94,7 +94,7 @@ label {
   line-height: 1.5;
 }
 
-input {
+input[type="text"] {
   width: 100%;
   min-width: 0;
   min-height: 52px;
@@ -151,6 +151,12 @@ input[aria-invalid="true"] {
   overflow: hidden;
   background: #fff;
   border-style: solid;
+}
+
+.qr-preview.has-qr.is-transparent {
+  background-color: #fff;
+  background-image: conic-gradient(#dfe5e2 25%, transparent 0 50%, #dfe5e2 0 75%, transparent 0);
+  background-size: 20px 20px;
 }
 
 .qr-image {
@@ -219,6 +225,89 @@ input[aria-invalid="true"] {
   stroke-width: 1.75;
   stroke-linecap: round;
   stroke-linejoin: round;
+}
+
+.color-controls {
+  display: grid;
+  gap: 24px;
+  min-width: 0;
+  padding-top: 24px;
+  border-top: 1px solid #dfe5e2;
+}
+
+.color-controls fieldset {
+  min-width: 0;
+  margin: 0;
+  padding: 0;
+  border: 0;
+}
+
+.color-controls legend {
+  padding: 0;
+  margin-bottom: 10px;
+  font-size: 0.875rem;
+  font-weight: 600;
+  line-height: 1.5;
+}
+
+.color-options {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.color-option {
+  display: flex;
+  flex: 1 1 100px;
+  align-items: center;
+  gap: 8px;
+  min-height: 44px;
+  padding: 10px;
+  border: 1px solid #c8d2cd;
+  border-radius: 8px;
+  cursor: pointer;
+}
+
+.color-option:has(input:checked) {
+  background: #edf6f1;
+  border-color: #20765b;
+  box-shadow: inset 0 0 0 1px #20765b;
+}
+
+.color-option input {
+  flex: none;
+  width: 16px;
+  height: 16px;
+  margin: 0;
+  accent-color: #20765b;
+}
+
+.custom-color {
+  display: grid;
+  gap: 8px;
+  margin-top: 12px;
+}
+
+.color-value {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+input[type="color"] {
+  width: 56px;
+  height: 44px;
+  padding: 4px;
+  border: 1px solid #c8d2cd;
+  border-radius: 8px;
+  background: #fff;
+  cursor: pointer;
+}
+
+.color-value output {
+  font-family: ui-monospace, SFMono-Regular, Consolas, monospace;
+  font-size: 0.875rem;
+  color: #5c6863;
 }
 
 @media (min-width: 480px) {

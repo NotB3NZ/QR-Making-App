@@ -24,10 +24,14 @@ Vite writes the production files to `dist/`.
 npm test
 ```
 
-The link normalization tests cover trimming, HTTP and HTTPS, bare domains, preserved URL components, and invalid input.
+Tests cover link normalization, independent colors, color persistence, transparent render options, and preventing stale previews or downloads during overlapping renders.
 
-## Milestone 2
+## Milestone 3
 
-Paste or type an HTTP or HTTPS link to generate a black-on-white QR code entirely in your browser with `qr-code-styling`. Bare domains receive an `https://` prefix; paths, query strings, and fragments are preserved. Blank or invalid input clears the preview and disables downloading.
+Paste or type an HTTP or HTTPS link to generate a square QR code entirely in your browser with `qr-code-styling`. Bare domains receive an `https://` prefix; paths, query strings, and fragments are preserved. Blank or invalid input clears the preview and disables downloading.
 
-Download PNG saves the exact displayed image as `qris.png` at 1024 × 1024 pixels, including a white margin. Color, transparency, and shape controls are reserved for later milestones.
+Download PNG saves the exact displayed image as `qris.png` at 1024 × 1024 pixels, including a clear margin.
+
+Below Download PNG, choose a white, black, transparent, or custom background, and an independent black, white, or custom QR pattern. Custom options reveal labeled native color pickers. Colors update immediately and stay selected when the link changes. The default is black on white.
+
+Transparent previews show a checkerboard. The checkerboard is only part of the interface: the exported PNG has real transparency, including its margin. Shape controls are reserved for a later milestone.
