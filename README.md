@@ -18,6 +18,16 @@ npm run preview
 
 Vite writes the production files to `dist/`.
 
-## Milestone 1
+## Tests
 
-The responsive light-mode interface includes an editable Link input, a static square preview, and a disabled Download PNG button. QR generation, link validation, PNG export, and customization are reserved for later milestones.
+```sh
+npm test
+```
+
+The link normalization tests cover trimming, HTTP and HTTPS, bare domains, preserved URL components, and invalid input.
+
+## Milestone 2
+
+Paste or type an HTTP or HTTPS link to generate a black-on-white QR code entirely in your browser with `qr-code-styling`. Bare domains receive an `https://` prefix; paths, query strings, and fragments are preserved. Blank or invalid input clears the preview and disables downloading.
+
+Download PNG saves the exact displayed image as `qris.png` at 1024 × 1024 pixels, including a white margin. Color, transparency, and shape controls are reserved for later milestones.

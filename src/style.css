@@ -12,6 +12,10 @@
   box-sizing: border-box;
 }
 
+[hidden] {
+  display: none !important;
+}
+
 body {
   margin: 0;
   min-width: 0;
@@ -113,6 +117,17 @@ input:focus-visible {
   outline-offset: 3px;
 }
 
+.field-message {
+  margin: 0;
+  color: #5c6863;
+  font-size: 0.875rem;
+  line-height: 1.5;
+}
+
+input[aria-invalid="true"] {
+  border-style: dashed;
+}
+
 .qr-preview {
   display: grid;
   place-items: center;
@@ -129,6 +144,21 @@ input:focus-visible {
   display: grid;
   justify-items: center;
   gap: 18px;
+}
+
+.qr-preview.has-qr {
+  padding: 0;
+  overflow: hidden;
+  background: #fff;
+  border-style: solid;
+}
+
+.qr-image {
+  display: block;
+  width: 100%;
+  height: auto;
+  min-width: 0;
+  aspect-ratio: 1;
 }
 
 .preview-icon {
@@ -161,6 +191,18 @@ input:focus-visible {
   font: inherit;
   font-weight: 600;
   line-height: 1.5;
+  background: #20765b;
+  color: #fff;
+  cursor: pointer;
+}
+
+.download-button:enabled:hover {
+  background: #195f49;
+}
+
+.download-button:focus-visible {
+  outline: 3px solid #20765b;
+  outline-offset: 3px;
 }
 
 .download-button:disabled {
