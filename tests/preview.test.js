@@ -27,7 +27,8 @@ function setup() {
   }
   for (const selector of [
     '#link', '#link-message', '.qr-preview', '.empty-state', '.qr-image',
-    '.download-button', '.customization-controls', '#background-custom', '#pattern-custom',
+    '.download-button', '.copy-button', '.copy-label',
+    '.customization-controls', '#background-custom', '#pattern-custom',
     '#background-custom-field', '#pattern-custom-field',
     '#background-color-value', '#pattern-color-value',
   ]) elements.set(selector, element());
@@ -63,6 +64,10 @@ function setup() {
       createObjectURL() { const url = `blob:${++nextUrl}`; liveUrls.add(url); return url; },
       revokeObjectURL(url) { liveUrls.delete(url); },
     },
+    fetch: async (url) => ({ blob: async () => new Blob([url], { type: 'image/png' }) }),
+    navigator: { clipboard: { write: async () => {} } },
+    ClipboardItem: class { constructor(items) { this.items = items; } },
+    setTimeout: globalThis.setTimeout,
   };
   const source = readFileSync(new URL('../src/main.js', import.meta.url), 'utf8');
   runInNewContext(source.replace(/^import .*;\n/gm, ''), context);

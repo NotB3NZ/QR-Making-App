@@ -184,7 +184,13 @@ input[aria-invalid="true"] {
   line-height: 1.6;
 }
 
-.download-button {
+.action-buttons {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+}
+
+.action-button {
   display: flex;
   align-items: center;
   justify-content: center;
@@ -197,27 +203,21 @@ input[aria-invalid="true"] {
   font: inherit;
   font-weight: 600;
   line-height: 1.5;
-  background: #20765b;
-  color: #fff;
   cursor: pointer;
 }
 
-.download-button:enabled:hover {
-  background: #195f49;
-}
-
-.download-button:focus-visible {
+.action-button:focus-visible {
   outline: 3px solid #20765b;
   outline-offset: 3px;
 }
 
-.download-button:disabled {
+.action-button:disabled {
   background: #edf1ef;
   color: #69756e;
   cursor: not-allowed;
 }
 
-.download-button svg {
+.action-button svg {
   flex: none;
   width: 20px;
   height: 20px;
@@ -225,6 +225,24 @@ input[aria-invalid="true"] {
   stroke-width: 1.75;
   stroke-linecap: round;
   stroke-linejoin: round;
+}
+
+.download-button {
+  background: #20765b;
+  color: #fff;
+}
+
+.download-button:enabled:hover {
+  background: #195f49;
+}
+
+.copy-button {
+  background: #fff;
+  color: #202c28;
+}
+
+.copy-button:enabled:hover {
+  background: #f0f4f2;
 }
 
 .customization-controls {

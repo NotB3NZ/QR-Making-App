@@ -9,6 +9,8 @@ const preview = document.querySelector('.qr-preview');
 const emptyState = document.querySelector('.empty-state');
 const image = document.querySelector('.qr-image');
 const downloadButton = document.querySelector('.download-button');
+const copyButton = document.querySelector('.copy-button');
+const copyLabel = document.querySelector('.copy-label');
 const customizationControls = document.querySelector('.customization-controls');
 const backgroundPicker = document.querySelector('#background-custom');
 const patternPicker = document.querySelector('#pattern-custom');
@@ -48,6 +50,7 @@ function showMessage(text, invalid = false) {
 
 function clearPreview() {
   downloadButton.disabled = true;
+  copyButton.disabled = true;
   readyKey = '';
   image.hidden = true;
   image.removeAttribute('src');
@@ -99,6 +102,7 @@ async function updatePreview() {
     preview.classList.add('has-qr');
     preview.classList.toggle('is-transparent', appearance.background === 'transparent');
     downloadButton.disabled = false;
+    copyButton.disabled = false;
   } catch {
     if (nextUrl) URL.revokeObjectURL(nextUrl);
     if (currentRevision !== revision) return;
@@ -123,6 +127,21 @@ downloadButton.addEventListener('click', () => {
   document.body.append(anchor);
   anchor.click();
   anchor.remove();
+});
+
+copyButton.addEventListener('click', async () => {
+  if (!pngUrl || renderKey(normalizeLink(input.value), readAppearance()) !== readyKey) return;
+  try {
+    // Fetch the blob URL so we can build a ClipboardItem with the same PNG.
+    const response = await fetch(pngUrl);
+    const blob = await response.blob();
+    await navigator.clipboard.write([new ClipboardItem({ [blob.type]: blob })]);
+    copyLabel.textContent = 'Image copied';
+    setTimeout(() => { copyLabel.textContent = 'Copy image'; }, 2000);
+  } catch {
+    copyLabel.textContent = 'Copy failed';
+    setTimeout(() => { copyLabel.textContent = 'Copy image'; }, 2000);
+  }
 });
 
 updatePreview();
